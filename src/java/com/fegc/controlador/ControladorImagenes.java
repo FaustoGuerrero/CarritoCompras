@@ -1,6 +1,7 @@
 
 package com.fegc.controlador;
 
+import com.fegc.modelo.ProductoDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/ControladorImagenes")
 public class ControladorImagenes extends HttpServlet{
-
+    ProductoDAO productoDAO = new ProductoDAO();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
@@ -22,7 +23,8 @@ public class ControladorImagenes extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+        int id = Integer.parseInt(request.getParameter("id"));
+        productoDAO.listarImg(id, response);
     }
     
 }

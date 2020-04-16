@@ -4,10 +4,11 @@
         <servlet-name>Controlador</servlet-name>
         <servlet-class>com.fegc.controlador.Controlador</servlet-class>
     </servlet>
+    <!--
     <servlet-mapping>
         <servlet-name>Controlador</servlet-name>
         <url-pattern>/Controlador</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
     <session-config>
         <session-timeout>
             30
