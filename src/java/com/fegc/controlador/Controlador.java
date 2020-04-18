@@ -26,45 +26,78 @@ public class Controlador extends HttpServlet {
 
     ProductoDAO productoDAO = new ProductoDAO();
     List<Producto> listaProductos = new ArrayList<>();
-    Producto producto = new Producto();
     List<Carrito> listaCarrito = new ArrayList<>();
+    Producto producto = new Producto();
+    Carrito carrito;
     int item;
     double totalPagar = 0.0;
     int cantidad = 1;
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
-        String accion = request.getParameter("accion");        
-        listaProductos = productoDAO.listar();        
-        switch (accion) {
-            case "AgregarCarrito":
-                int id = Integer.parseInt(request.getParameter("id"));
-                producto = productoDAO.listarId(id);
-                item++;
-                Carrito carrito = new Carrito();
-                carrito.setItem(item);
-                carrito.setIdProducto(producto.getId());
-                carrito.setNombres(producto.getNombres());
-                carrito.setDescripcion(producto.getDescripcion());
-                carrito.setPrecioCompra(producto.getPrecio());
-                carrito.setCantidad(cantidad);
-                carrito.setSubTotal(cantidad * producto.getPrecio());
-                listaCarrito.add(carrito);
-                request.setAttribute("contador", listaCarrito.size());
-                request.getRequestDispatcher("Controlador?accion=home").forward(request, response);
-                break;
-            case "Carrito":
-                totalPagar = 0.0;
-                request.setAttribute("listaCarrito", listaCarrito);
-                for (int i = 0; i < listaCarrito.size(); i++) {
-                    totalPagar += listaCarrito.get(i).getSubTotal();
-                }
-                request.setAttribute("totalPagar", totalPagar);
-                request.getRequestDispatcher("carrito.jsp").forward(request, response);
-                break;
-            default:                
-                request.setAttribute("listaProductos", listaProductos);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+    int idProducto;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String accion = request.getParameter("accion");
+        listaProductos = productoDAO.listar();
+        if (accion != null) {
+            switch (accion) {
+                case "Eliminar":
+                    idProducto = Integer.parseInt(request.getParameter("idProducto"));
+                    for (int i = 0; i < listaCarrito.size(); i++) {
+                        if (listaCarrito.get(i).getIdProducto() == idProducto) {
+                            listaCarrito.remove(i);
+                        }
+                    }
+                    break;
+                case "Comprar":
+                    totalPagar = 0.0;
+                    listaCarrito.add(llenarCarrito(request));
+                    for (int i = 0; i < listaCarrito.size(); i++) {
+                        totalPagar += listaCarrito.get(i).getSubTotal();
+                    }
+                    request.setAttribute("listaCarrito", listaCarrito);
+                    request.setAttribute("contador", listaCarrito.size());
+                    request.setAttribute("totalPagar", totalPagar);
+                    request.getRequestDispatcher("/WEB-INF/carrito.jsp").forward(request, response);
+                    break;
+                case "AgregarCarrito":
+                    listaCarrito.add(llenarCarrito(request));
+                    request.setAttribute("contador", listaCarrito.size());
+                    request.getRequestDispatcher("Controlador?accion=home").forward(request, response);
+                    break;
+                case "Carrito":
+                    totalPagar = 0.0;
+                    request.setAttribute("listaCarrito", listaCarrito);
+                    for (int i = 0; i < listaCarrito.size(); i++) {
+                        totalPagar += listaCarrito.get(i).getSubTotal();
+                    }
+                    request.setAttribute("totalPagar", totalPagar);
+                    request.getRequestDispatcher("/WEB-INF/carrito.jsp").forward(request, response);
+                    break;
+                default:
+                    this.accionDefault(request, response);
+            }
+        } else {
+            this.accionDefault(request, response);
         }
+    }
+
+    private Carrito llenarCarrito(HttpServletRequest request) {
+        idProducto = Integer.parseInt(request.getParameter("id"));
+        producto = productoDAO.listarId(idProducto);
+        item++;
+        carrito = new Carrito();
+        carrito.setItem(item);
+        carrito.setIdProducto(producto.getId());
+        carrito.setNombres(producto.getNombres());
+        carrito.setDescripcion(producto.getDescripcion());
+        carrito.setPrecioCompra(producto.getPrecio());
+        carrito.setCantidad(cantidad);
+        carrito.setSubTotal(cantidad * producto.getPrecio());
+        return carrito;
+    }
+
+    private void accionDefault(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("listaProductos", listaProductos);
+        request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 
     @Override

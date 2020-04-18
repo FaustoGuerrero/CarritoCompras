@@ -24,7 +24,7 @@ public class ControladorImagenes extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        productoDAO.listarImg(id, response);
+        productoDAO.listarImg2(id, response);
     }
     
 }

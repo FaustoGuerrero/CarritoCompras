@@ -11,21 +11,22 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Tienda de productos</a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-default navbar-fixed-top">
+            <a class="navbar-brand" href="#">Joyer&iacute;a Europea Catalina</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/Controlador?accion=home">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/Controlador?accion=home"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Ofertas</a>
+                        <a class="nav-link" href="#"><i class="fas fa-percent"></i> Ofertas</a>
                     </li>                        
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/Controlador?accion=home">Seguir comprando</a>
+                        <!-- ${pageContext.request.contextPath}/Controlador?accion=home -->
+                        <a class="nav-link" href="index.jsp"><i class="fas fa-cart-plus">(<label style="color: orange">${contador}</label>)</i> Seguir comprando</a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
@@ -53,7 +54,7 @@
             <br/>
             <div class="row">
                 <div class="col-sm-8">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="tablaDatos">
                         <thead>
                             <tr>
                                 <th>ITEM</th>
@@ -65,9 +66,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="car" items="${listaCarrito}">
+                            <c:forEach var="car" items="${listaCarrito}" varStatus="contador">
                                 <tr>
-                                    <td>${car.item}</td>
+                                    <td id="indiceRow">${contador.count}</td>
                                     <td>${car.nombres}</td>
                                     <td>${car.descripcion}
                                         <img src="ControladorImagenes?id=${car.idProducto}" width="100">
@@ -76,7 +77,8 @@
                                     <td><fmt:formatNumber value="${car.subTotal}" type="currency"/></td>
                                     <td>
                                         <a class="btn btn-info btn-block" href="#">Editar</a>
-                                        <a class="btn btn-danger btn-block" href="#">Eliminar</a>
+                                        <input type="hidden" id="idProducto" value="${car.idProducto}">
+                                        <a class="btn btn-danger btn-block" id="btnDelete">Eliminar</a>
                                     </td>
                                 </tr>    
                             </c:forEach>                            
@@ -89,12 +91,12 @@
                             <h3>Generar compra</h3>
                         </div>
                         <div class="card-body">
-                            <label>Subtotal: </label>
-                            <input type="text" readonly="" class="form-control" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">
+                            <label>Subtotal: </label>                            
+                                    <input type="text" readonly="" class="form-control text-center font-weight-bold" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">                                    
                             <label>Descuento: </label>
-                            <input type="text" readonly="" class="form-control" value="$ 0.00">
+                                    <input type="text" readonly="" class="form-control text-center font-weight-bold" value="$ 0.00">
                             <label>Total a pagar: </label>
-                            <input type="text" readonly="" class="form-control" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">
+                            <input type="text" readonly="" class="form-control text-center font-weight-bold" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">
                         </div>
                         <div class="card-footer">
                             <a class="btn btn-info btn-block" href="#">Realizar pago</a>
@@ -104,8 +106,10 @@
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js">
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>                    
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="js/funciones.js" type="text/javascript"></script>
     </body>
 </html>
