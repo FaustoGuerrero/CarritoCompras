@@ -1,7 +1,7 @@
 
 package com.fegc.controlador;
 
-import com.fegc.modelo.ProductoDAO;
+import com.fegc.modeloDAO.ProductoDAO;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

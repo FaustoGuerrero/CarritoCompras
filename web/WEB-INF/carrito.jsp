@@ -24,9 +24,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-percent"></i> Ofertas</a>
                     </li>                        
-                    <li class="nav-item">
-                        <!-- ${pageContext.request.contextPath}/Controlador?accion=home -->
-                        <a class="nav-link" href="index.jsp"><i class="fas fa-cart-plus">(<label style="color: orange">${contador}</label>)</i> Seguir comprando</a>
+                    <li class="nav-item">                        
+                        <a class="nav-link" id="seguirComprando" href="index.jsp"><i class="fas fa-cart-plus">(<label style="color: orange">${contador}</label>)</i> Seguir comprando</a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0">
@@ -53,7 +52,7 @@
             <h3>Carrito de compras</h3>
             <br/>
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-8" id="contenedorTabla">
                     <table class="table table-hover" id="tablaDatos">
                         <thead>
                             <tr>
@@ -65,7 +64,7 @@
                                 <th>ACCION</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="bodyTablaCarrito">
                             <c:forEach var="car" items="${listaCarrito}" varStatus="contador">
                                 <tr>
                                     <td id="indiceRow">${contador.count}</td>
@@ -73,8 +72,10 @@
                                     <td>${car.descripcion}
                                         <img src="ControladorImagenes?id=${car.idProducto}" width="100">
                                     </td>
-                                    <td>${car.cantidad}</td>
-                                    <td><fmt:formatNumber value="${car.subTotal}" type="currency"/></td>
+                                    <td>
+                                        <input type="number" id="inputCantidad" value="${car.cantidad}" class="form-control text-center" min="1" onclick="changeCantidad(${car.idProducto})">
+                                    </td>
+                                    <td id="subtotalTabla"><fmt:formatNumber value="${car.subTotal}" type="currency"/></td>
                                     <td>
                                         <a class="btn btn-info btn-block" href="#">Editar</a>
                                         <input type="hidden" id="idProducto" value="${car.idProducto}">
@@ -92,15 +93,15 @@
                         </div>
                         <div class="card-body">
                             <label>Subtotal: </label>                            
-                                    <input type="text" readonly="" class="form-control text-center font-weight-bold" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">                                    
+                                    <input type="text" readonly="" class="form-control text-center font-weight-bold" id="subtotalCarrito" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">                                    
                             <label>Descuento: </label>
-                                    <input type="text" readonly="" class="form-control text-center font-weight-bold" value="$ 0.00">
+                            <input type="text" onkeyup="getDescuento(this.value)" class="form-control text-center font-weight-bold" id="inputDescuento" value="$ 0.00">
                             <label>Total a pagar: </label>
-                            <input type="text" readonly="" class="form-control text-center font-weight-bold" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">
+                            <input type="text" readonly="" class="form-control text-center font-weight-bold" id="totalCarrito" value="<fmt:formatNumber value="${totalPagar}" type="currency"/>">
                         </div>
                         <div class="card-footer">
                             <a class="btn btn-info btn-block" href="#">Realizar pago</a>
-                            <a class="btn btn-danger btn-block" href="#">Generar compra</a>
+                            <a class="btn btn-danger btn-block" href="${pageContext.request.contextPath}/Controlador?accion=GenerarCompra">Generar compra</a>
                         </div>
                     </div>
                 </div>
@@ -110,6 +111,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>                    
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <script src="js/funciones.js" type="text/javascript"></script>
+        <script src="js/funciones.js?0.4" type="text/javascript"></script>
+        <script src="js/funcionesAgregar.js" type="text/javascript"></script>
     </body>
 </html>
